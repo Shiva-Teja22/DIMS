@@ -6,20 +6,51 @@
 #main{
     height: 100%;
     width: 100%;
-    background-color: rgb(255, 255, 255);
-    
+    background-color: #d6c7c7;   
+}
+
+#main p{
+    color: #fff;
+}
+
+.texts p{
+    color: #fff;
+}
+
+.icon p{
+    color: #fff;
 }
 
 .header{
     margin-top: 0%;
     padding-top: 0%;
     width: 100%;
-    height: 9%;
+    height: 60px;
+    z-index: 1000;
     background: #f685a1;
     position: fixed;
     display: flex;
     align-items: center;
     justify-content: space-around;
+}
+
+.header .texts p {
+    font-family: 'Inter', sans-serif;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.header .texts p:hover {
+    color: #e59696;
+}
+
+#contact, #contact p {
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    font-weight: bold;
+    color: white;
 }
 
 .banner{
@@ -44,7 +75,7 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.bannerheader p{
+.bannerheader h6{
     margin: 10px;
     font-size: 22px;
     margin: 0px;
@@ -67,6 +98,9 @@
 }
 
 .bannericons a{
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
     font-size: 30px;
     margin-top: 900px;
     margin-left: 9px;
@@ -83,11 +117,16 @@
 .homefeatures{ 
     display: flex;
     flex-direction: row;
+    
 }
 
 .homefeature{
     padding: 10px 20px;
     text-align: center;
+}
+
+.homefeature h3, p{
+    color: #ccc;
 }
 
 .homefeature a{
@@ -101,6 +140,25 @@
     padding-top: 5px;
     margin-bottom: 20px;
     border-radius: 50px;
+}
+
+.homefeature {
+    margin-top: 30px;
+    padding: 30px;
+    background-color: rgb(23, 23, 23);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.homefeature:hover {
+    transform: scale(1.05);
+    z-index: 10; 
+    box-shadow: 0px 10px 20px rgba(255, 0, 0, 0.5)
+}
+
+.homefeature a:hover {
+    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.7); 
+    background-color: #ff3366;
 }
 
 .texts{
@@ -126,29 +184,47 @@
     background-color:rgb(170, 206, 218);
 }
 
-#login{
-    text-align: center;
-    padding: 16px;
-    border-radius: 25px;
+#login {
     display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    background: #fff7f7;
+    color: #f685a1;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    text-decoration: none;
 }
 
 #login:hover{
     background-color:rgb(173, 209, 221);
 }
 
-#try{
-    padding: 14px 25px;
-    color: aliceblue;
-    background-color: rgb(30, 30, 126);
+#try {
+    background-color: #4c4cb3;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.homefeature{
+    margin-top: 30px;
+    padding-top: 55px;
+    background-color: rgb(23, 23, 23);
 }
 
 .page2 {
+    margin-top: 30px;
+    padding-top: 55px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: #e3e3e3; 
+    background-color: #585757; 
     padding: 50px;
 }
 
@@ -157,14 +233,16 @@
     padding: 20px;
 }
 
+
+
 .page2 h3 {
     margin-bottom: 15px;
     font-size: 24px;
-    color: #333;
+    color: #e4e2e2;
 }
 
 .page2 p {
-    color: #848484;
+    color: #b7b6b6;
     line-height: 1.6;
     margin-bottom: 20px;
 }
@@ -207,7 +285,11 @@
 
 .video iframe {
     max-width: 100%;
-    border-radius: 5px;
+    border-radius: 7px;
 }
 
-
+.page2, .video :hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.7); 
+    background-color: #585757; 
+}
