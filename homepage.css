@@ -191,7 +191,7 @@
     padding: 8px 15px;
     border-radius: 5px;
     background: #fff7f7;
-    color: #005;
+    color: #f685a1;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
@@ -200,10 +200,6 @@
 
 #login:hover{
     background-color:rgb(173, 209, 221);
-}
-
-.login{
-    text-decoration: none;
 }
 
 #try {
