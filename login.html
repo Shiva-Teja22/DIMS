@@ -1,34 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> DISM login-DrugInventoryManagementSystem</title>
-    <link rel="stylesheet" href="login.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DISM Login - Drug Inventory Management System</title>
+  <link rel="stylesheet" href="login.css" />
 </head>
 <body id="loginbody">
 
-    <div id="main">     
-        <div class="loginHeader">
-            <h1>DISM</h1>
-            <p>Drug Inventroy & Supply Management</p>
-
-        </div>
-        <div class="loginbody">
-            <form action="">
-                <div class="loginInputs">
-                   <label for="">Username</label>
-                   <input placeholder="Username" type="text"> 
-                </div>
-                <div class="loginInputs">
-                   <label for="">Password</label>
-                   <input placeholder="Password" type="password"> 
-                </div>
-                <div class="buttonlogin">
-                    <button>login</button>
-                </div>
-            </form>
-        </div>
+  <div id="main">     
+    <div class="loginHeader">
+      <h1>DISM</h1>
+      <p>Drug Inventory & Supply Management</p>
     </div>
+
+    <div class="loginbody">
+      <form id="loginForm">
+        <div class="loginInputs">
+          <label>Username</label>
+          <input id="username" placeholder="Username" type="text"> 
+        </div>
+        <div class="loginInputs">
+          <label>Password</label>
+          <input id="password" placeholder="Password" type="password"> 
+        </div>
+        <div class="buttonlogin">
+          <button type="submit">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add this for popup message display -->
+  <div id="popup" class="popup"></div>
+
+  <script>
+const popup = document.getElementById('popup');
+
+function showPopup(message, type = "success") {
+  popup.innerText = message;
+  popup.className = `popup show ${type}`;
+  setTimeout(() => {
+    popup.className = 'popup';
+  }, 3000);
+}
+
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
+
+  const unamePattern = /^[a-zA-Z][a-zA-Z0-9]*$/;
+  const pwdPattern = /^.{6,}$/;
+
+  let valid = true;
+
+  if (username === "") {
+    showPopup("Please enter username", "error");
+    valid = false;
+  } else if (!unamePattern.test(username)) {
+    showPopup("Username must start with a letter and be alphanumeric", "error");
+    valid = false;
+  }
+
+  if (password === "") {
+    showPopup("Please enter password", "error");
+    valid = false;
+  } else if (!pwdPattern.test(password)) {
+    showPopup("Password must be at least 6 characters", "error");
+    valid = false;
+  }
+
+  if (valid) {
+    if (username === "Shivateja" && password === "Dim$69") {
+      showPopup("Login Successful! 🎉", "success");
+      setTimeout(() => {
+        window.location.href = "http://127.0.0.1:5500/DrugInventoryManagementSystem/dashboard.html";
+      }, 1000); // slight delay for user to see the popup
+    } else {
+      showPopup("Invalid username or password", "error");
+    }
+  }
+});
+
+  </script>
+
 </body>
 </html>
