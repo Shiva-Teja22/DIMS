@@ -1,7 +1,7 @@
 
 
 body#loginbody{
-    background: url(pexels-cottonbro-8657290.jpg) no-repeat;
+    background: url(dims.png);
     background-size: cover;
 }
 
@@ -67,17 +67,57 @@ body#loginbody{
     padding: 5px;
     border-radius: 15px;
     text-align: center;
-
+    cursor: pointer;
 }
 
 .buttonlogin{
     margin-top: 36px;
     text-align: center;
+  
 }
 
 .buttonlogin button{
     font-size:  21px;
     padding: 10px 22px;
     background-color:  #f685a2;
+    cursor: pointer;
 
+}
+
+/* Popup Toast Message */
+.popup {
+    position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #333;
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 6px;
+      box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.3), 0px 2px 10px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 1000;
+      text-align: center;
+    }
+
+.popup.show {
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup.error {
+    background: #e74c3c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup.success {
+    background: #2ecc71;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
