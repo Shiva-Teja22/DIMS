@@ -11,6 +11,7 @@
 
 #main p{
     color: #fff;
+    align-items: center;
 }
 
 .texts p{
@@ -31,8 +32,16 @@
     position: fixed;
     display: flex;
     align-items: center;
+    justify-content: center;
     justify-content: space-around;
 }
+
+.texts {
+    display: flex;
+    align-items: center;
+    gap: 4px; /* Optional: space between text and icon */
+}
+
 
 .header .texts p {
     font-family: 'Inter', sans-serif;
@@ -40,6 +49,9 @@
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .header .texts p:hover {
@@ -56,7 +68,7 @@
 .banner{
     height: 100%;
     width: 100%;
-    background: url(banner2.jpg) no-repeat center; 
+    background: url(banner2.jpg) no-repeat center ; 
     background-size: cover;
     padding-top: 100px;
     padding-bottom: 100px;
@@ -199,7 +211,11 @@
 }
 
 #login:hover{
-    background-color:rgb(173, 209, 221);
+    transform: scale(1.03);  
+    transition: 0.2s;
+    color: #fff7f7;
+    box-shadow: 0px 0px 20px rgba(252, 1, 101, 0.742); 
+    background-color:  #fb0643;
 }
 
 #try {
@@ -288,7 +304,7 @@
     border-radius: 7px;
 }
 
-.page2, .video :hover {
+.video :hover {
     transform: scale(1.05);
     box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.7); 
     background-color: #585757; 
@@ -304,6 +320,11 @@
     margin-bottom: 18px;
 }
 
+.socialIcons{
+    background-color: #e3e3e3;
+    padding: 50px;
+}
+
 .socialIcons a{
     font-size: 22px;
     height: 25px;
@@ -317,7 +338,49 @@
     margin-left: 18px;
     margin-right:18px;
     border-radius: 50%;
-    diplay: inline-block;
+    display: inline-block;
     background: #d4d4d4;
     
 }
+
+.socialIcons :hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.7); 
+    background-color: #f685a1;
+    color: #e3e3e3;
+    cursor: pointer;
+}
+
+.socialIcons a :hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.7); 
+    background-color: #f685a1; 
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.Socials{
+    background: #000;
+    padding-top: 12vb;
+}
+
+.Socials h1,p{
+    margin: 7px;
+   color: #ccc;
+}
+
+.footer{
+    background: #000;
+    color: #ccc;
+    padding-top: 50px;
+    padding-bottom: 30px;
+    text-align: center;
+    text-decoration: none;
+    justify-content: space-between;
+}
+
+.footer a{
+    color: #ccc;
+   margin-left: 34px;
+}
+
