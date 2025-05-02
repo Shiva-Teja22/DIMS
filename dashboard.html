@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Inventory Management System</title>
+  <link rel="stylesheet" type="text/css" href="dashboard.css">
+  <script src="https://use.fontawesome.com/0c7a3095b5.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css">
+</head>
+
+<body>
+
+  <div id="dashboardMainContainer">
+
+    <div class="dashboard sidebar">
+      <h3 class="dashboard logo">IMS</h3>
+
+      <div class="dashboard sidebar_user">
+        <img src="ChatGPT Image Apr 26, 2025, 11_35_38 AM.png" alt="User image" width="80" height="80" />
+        <span>Shiva</span>
+      </div>
+
+      <div class="dashboard sidebar_menus">
+        <ul class="dashboard menu lists">
+          <li>
+            <a href="#"><i class="fa fa-dashboard"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="#"><i class="ri-megaphone-fill"></i> Campaing</a>
+          </li>
+          <li>
+            <a href="#"><i class="ri-money-rupee-circle-line"></i> Revenue Management</a>
+          </li>
+          <li>
+            <a href="#"><i class="ri-wallet-fill"></i> Accounts Receivable</a>
+          </li>
+          <li>
+            <a href="#"><i class="ri-settings-5-fill"></i> Configuration</a>
+          </li>
+          <li>
+            <a href="#"><i class="ri-line-chart-fill"></i> Stats</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="dashboard content container">
+      <div class="dashboard topNav">
+        <a href="#" id="toogleBtn"><i class="fa fa-navicon"></i></a>
+        <a href="#" id="logoutBtn"><i class="fa fa-power-off"></i> Log-out</a>
+      </div>
+
+      <div class="dashboard_content">
+        <h2>Welcome to Inventory Management System</h2>
+        <!-- Main content goes here -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toogleBtn');
+    const sidebar = document.querySelector('.dashboard.sidebar');
+    const contentContainer = document.querySelector('.dashboard.content.container');
+    const logo = document.querySelector('.dashboard.logo');
+  
+    let sidebarVisible = true;
+  
+    toggleBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+  
+      if (sidebarVisible) {
+        sidebar.style.width = "0";
+        contentContainer.style.width = "100%";
+        logo.style.width = "0";
+        logo.style.height = "0";
+        logo.style.color = "#fff";
+      } else {
+        sidebar.style.width = "20%"; // Adjust as needed
+        contentContainer.style.width = "80%"; // Adjust as needed
+        logo.style.width = "";
+        logo.style.height = "";
+        logo.style.color = "#f685a1";
+      }
+  
+      sidebarVisible = !sidebarVisible;
+    });
+  </script>
+  
+  
+</body>
+
+</html>
