@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Online Pharmacy Dashboard" />
+  <title>Welcome DIMS</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='customer.css') }}">
+
+</head>
+<body>
+  <header class="header" role="banner">
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#" aria-current="page"><i class="ri-home-5-fill"></i>Home</a>
+      <a href="#">Orders</a>
+      <a href="#">Help</a>
+    </nav>
+    <div class="search-bar-header">
+      <label for="searchInput" class="sr-only">Search medicines</label>
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Search medicines"
+        aria-label="Search medicines"
+      />
+    </div>
+    <button id="darkModeToggle" aria-pressed="false" aria-label="Toggle dark mode">
+      Dark Mode
+    </button>
+  </header>
+
+  <main>
+    <h2 class="main">Meds and Products</h2>
+    <section class="shop-container" aria-live="polite" aria-label="Pharmacy products">
+      <!-- Shop items will be dynamically injected here -->
+    </section>
+  </main>
+
+    <div class="page">
+       <section class="shop-container-page2" aria-live="polite" aria-label="Pharmacy products" >
+      <!---->
+    </section>
+  </div>
+
+  <div class="page2">
+    <section class="shop-container-page2" aria-live="polite" aria-label="Pharmacy products" >
+      <!---->
+    </section>
+  </div>
+
+  <button id="cartBtn" aria-label="Open shopping cart" aria-haspopup="dialog" aria-controls="cartPanel">
+    <i class="ri-shopping-cart-line"></i>
+    <span id="cartCount" style="position:absolute;top:5px;right:5px;background:#dc3545;color:#fff;border-radius:50%;font-size:0.8rem;padding:2px 6px;min-width:20px;text-align:center;user-select:none;">0</span>
+  </button>
+
+  <aside class="cart-panel" id="cartPanel" role="dialog" aria-modal="true" aria-labelledby="cartHeading" tabindex="-1">
+    <header class="cart-header">
+      <h2 id="cartHeading">Your Cart</h2>
+      <button class="close-cart" id="closeCartBtn" aria-label="Close shopping cart">&times;</button>
+    </header>
+    <div id="cartItems" tabindex="0">
+      <!-- Cart items injected here -->
+    </div>
+<div class="cart-total" id="cartTotal">Total: ₹0.00</div>
+<button id="placeOrderBtn" class="place-order-btn" aria-label="Place your order" disabled>Place Order</button>
+
+  </aside>
+
+  <script>
+    // Sample product data
+    const products = [
+      {
+        name: "Paracetamol",
+        price: 2,
+        description: "Pain reliever and fever reducer",
+        image: "https://5.imimg.com/data5/SELLER/Default/2025/5/511449998/VL/OC/OK/66023219/product-jpeg-500x500.jpeg"
+      },
+      {
+        name: "Amoxicillin",
+        price: 5.0,
+        description: "Antibiotic for bacterial infections",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi3-Rxv32TXa0IDdkSwYWp-OpPiEJiFEEm6g&s"
+      },
+      {
+        name: "Adderall",
+        price: 2.0,
+        description: "Recommended for ADHD",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxUGuT4KkugcRvMuyOyNjvVEZgFjYU6XyWqy0XKrh2Ct8-PDNr3KU9UVB0mxlNDgkXMYc&usqp=CAU"
+      },
+      {
+        name: "Cetirizine",
+        price: 1.5,
+        description: "Allergy relief medication",
+        image: "https://medino-product.imgix.net/teva-cetirizine-10mg-hay-fever-allergy-relief-30-tablets-b9ce9411.png?h=350&w=350&fit=fill&bg=FFF&auto=format&q=90"
+      },
+      {
+        name: "First aid kit",
+        price: 8.0,
+        description: "A compact set of essential medical supplies for treating minor injuries and emergencies.",
+        image: "https://images-cdn.ubuy.co.in/63f7c32b6f0bfc032f66228c-waterproof-first-aid-kit-for-car-home.jpg"
+      },
+      {
+        name: "Plaster",
+        price: 1.20481927711,
+        description: "Used to cover and protect minor cuts, wounds, or blisters.",
+        image: "https://m.media-amazon.com/images/I/61k5pMnodgL._AC_UF1000,1000_QL80_.jpg"
+      },
+      {
+        name: "Cotton wool",
+        price: 2.0,
+        description: " Soft fibers for cleaning wounds or applying antiseptics.",
+        image: "https://halomedicals.com/wp-content/uploads/2020/09/cotton-wool-570x570.jpg"
+      },
+      {
+        name: "Surgical mask",
+        price: 1.5,
+        description: "Protective mask to block germs and droplets.(pack of 6)",
+        image: "https://unitedcanadainc.com/cdn/shop/collections/1.-Face-Masks.jpg?v=1716195013"
+      }
+      ,
+      {
+        name: "Amlong",
+        price: 2.0,
+        description: " Medication used to treat high blood pressure and chest pain.",
+        image: "https://assets.truemeds.in/Images/ProductImage/TM-TACR1-002196/amlong-10-tablet-15_amlong-10-tablet-15--TM-TACR1-002196_1.png"
+      }
+      ,
+      {
+        name: "Benzonatate",
+        price: 3.01204819277,
+        description: "Cough suppressant that numbs the throat and lungs.",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjY-LjnGY-GoCSu7ZTp-B-9PBk2XAnaQ3Jkg&s"
+      }
+      ,
+      {
+        name: "Azithromycin",
+        price:3.61445783133,
+        description: "Antibiotic used to treat bacterial infections.",
+        image: "https://cpimg.tistatic.com/05678002/b/5/Azithromycin-100-Mg-Tablets.jpg"
+      }
+      ,
+      {
+        name: "Biktarvy",
+        price: 35.0,
+        description: "A medication used to treat HIV infection.",
+        image: "https://pharmaserve.com/wp-content/uploads/2020/10/Biktarvy.jpg"
+      }
+      ,
+      {
+        name: "Oxygen mask",
+        price: 35.0,
+        description: "Device that delivers oxygen to assist breathing.",
+        image: "https://www.oxy99.in/cdn/shop/products/41xypEB_5GL.jpg?v=1622528298"
+      }
+      ,
+      {
+        name: "Weight scale",
+        price: 35.0,
+        description: "Accurate and easy-to-use device for tracking your weight.",
+        image: "https://down-my.img.susercontent.com/file/sg-11134201-22100-yprtdffxhkivb9"
+      }
+      ,
+      {
+        name: "BP monitor",
+        price: 15.0,
+        description: "Convenient and precise device to track your blood pressure anytime.",
+        image: "https://m.media-amazon.com/images/I/71eSP8Sf-eL._AC_UF1000,1000_QL80_.jpg"
+      }
+      ,
+      {
+        name: "Pregnancy test kit",
+        price: 11.0,
+        description: "Quick and reliable at-home test for early pregnancy detection.",
+        image: "https://cdn01.pharmeasy.in/dam/products_otc/226830/prega-news-pregnancy-test-kit-1-1669655006.jpg"
+      }
+      ,
+      {
+        name: "Benzonatate",
+        price: 3.0,
+        description: " Fast-acting cough relief that soothes your throat and lungs.",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjY-LjnGY-GoCSu7ZTp-B-9PBk2XAnaQ3Jkg&s"
+      }
+      ,
+      {
+        name: "Botox",
+        price: 25.0,
+        description: " Injectable treatment that smooths wrinkles and fine lines for a youthful look.",
+        image: "https://qtxasset.com/quartz/qcloud5/media/image/fiercepharma/1525114362/botox-cosmetic-100-units-vial.jpg/botox-cosmetic-100-units-vial.jpg?VersionId=eF_7tq9mMuOKr2Q2Wj3iSQGibu_kYIVZ"
+      }
+      ,
+      {
+        name: "Biktarvy ",
+        price: 7.0,
+        description: "A powerful, once-daily pill for effective and streamlined HIV treatment.",
+        image: "https://pharmaserve.com/wp-content/uploads/2020/10/Biktarvy.jpg"
+      }
+      ,
+      {
+        name: "Clindamycin",
+        price: 5.0,
+        description: "Antibiotic used to treat serious bacterial infections.",
+        image: "https://lifestylebiosciencedermacare.com/wp-content/uploads/2023/12/CLANISOL-N-GEL.jpg"
+      }
+      ,
+      {
+        name: "Thermometer",
+        price: 8.0,
+        description: "Quick and accurate tool for measuring body temperature.",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1M_0MYMvE0yP7OGwsdWJWlHTLy24yqnNaI8NmJ6Dc1iolKPreDuCCR8vSOJ99dQvqii0&usqp=CAU"
+      }
+      ,
+      {
+        name: "Resuscitator",
+        price: 15.0,
+        description: "Life-saving device designed to restore breathing in emergencies.",
+        image: "https://5.imimg.com/data5/SELLER/Default/2025/1/483688496/UX/OP/PQ/188850227/ambu-bag-silicone-manual-resuscitator-500x500.jpg"
+      }
+
+      ,
+      {
+        name: "Bandage",
+        price: 2.0,
+        description: "protects wounds and supports healing.",
+        image: "https://media.istockphoto.com/id/516549639/vector/bandages.jpg?s=612x612&w=0&k=20&c=qOjy0E7r-x2KG2ApGdttKCKcmMmdMW2XDpvugPVngXQ="
+      }
+      ,
+      {
+        name: "Compression Bandage",
+        price: 2.9,
+        description: "Elastic wrap that reduces swelling and supports injured areas.",
+        image: "https://klinion.com/-/media/Project/KlinionCOM/Images/Resized-images/Product-images/long-stretch-compression-bandage-with-box-square.jpg?h=1200&iar=0&w=1200&hash=1FF5218F3FB075174F28AAC61C03115E"
+      }
+      ,
+      {
+        name: "Brilinta",
+        price: 5.6,
+        description: "dvanced blood thinner that helps prevent heart attacks and strokes.",
+        image: "https://vascularnews.com/wp-content/uploads/sites/7/2019/09/Brilinta-1.jpg"
+      }
+      ,
+      {
+        name: "Bunavail",
+        price: 4.8,
+        description: "A prescription film that treats opioid dependence with ease and convenience.",
+        image: "https://www.grxstatic.com/d4fuqqd5l3dbz/products/cwf_tms/Package_24646.PNG"
+      }
+      ,
+      {
+        name: "Buprenorphine",
+        price: 10.0,
+        description: " Medication used to treat opioid dependence and relieve pain.",
+        image: "https://gl-pharma.com/wp-content/uploads/fly-images/75757/74019-Gerot-Lannach-GL-PHARMA-Buprenorphine-SL-Tablets-Render-8mg-960x960.png"
+      }
+      ,
+      {
+        name: "Cephalexin",
+        price: 15.0,
+        description: "Antibiotic that treats a wide range of bacterial infections effectively.",
+        image: "https://nestoronline.in/product_image/images/CHANGE/Screenshot%202022-08-01%20135838.png"
+      }
+      ,
+      {
+        name: "Syringe",
+        price: 13.0,
+        description: "Precision tool for administering or drawing fluids safely.",
+        image: "https://www.terumo-europe.com/Product%20Images/barrel%203.png"
+      }
+      ,
+      {
+        name: "IV(Intravenous)",
+        price: 5.50,
+        description: "Method to deliver fluids and medications directly into the bloodstream.",
+        image: "https://www.ote-store.com/image/cache/catalog/products/iv%20set%20kinmed-550x550.png"
+      }
+       ,
+      {
+        name: "Stretcher",
+        price: 6.70,
+        description: "Portable device for safely transporting injured or immobile patients.",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJnuW-1n6aJwSY7LI2KXjbCTdXlk1iixiUgw&s"
+      }
+       ,
+      {
+        name: "Urine Sampler",
+        price: 7.50,
+        description: "Convenient kit for collecting urine samples accurately and hygienically.",
+        image: "https://5.imimg.com/data5/SELLER/Default/2025/5/508045951/AF/OV/KG/7444604/sample-container-for-urine-stool-sputum.jpeg"
+      }
+       ,
+       {
+  name: "Cymbalta",
+  price: 4.7,
+  description: "Treats depression, anxiety, and nerve pain.",
+  image: "https://breckenridgepharma.com/wp-content/uploads/2024/04/IMG_2295.JPG-scaled.jpg"
+},
+{
+  name: "Doxycycline",
+  price: 9.0,
+  description: "Antibiotic for infections and malaria prevention.",
+  image: "https://onlinedoctor.well.co.uk/cdn/shop/files/Doxycycline_-_Malaria_tablet_730x.progressive.jpg?v=1730751785"
+},
+{
+  name: "Dupixent",
+  price: 7.0,
+  description: "Used to treat eczema, asthma, and nasal polyps.",
+  image: "https://indianpharmanetwork.co.in/medicines/wp-content/uploads/2024/07/Dupixent.webp"
+},
+{
+  name: "Entresto",
+  price: 5.0,
+  description: "For heart failure management.",
+  image: "https://www.grxstatic.com/d4fuqqd5l3dbz/products/cwf_tms/Package_31120.PNG"
+},
+{
+  name: "Dropper",
+  price: 2.0,
+  description: "A small tool used to dispense liquids in drops, typically for medicine.",
+  image: "https://5.imimg.com/data5/DS/GJ/MU/SELLER-4686308/2-ml-pipette-dropper.jpg"
+},
+{
+  name: "Scalpel",
+  price: 10.0,
+  description: "A small, sharp surgical knife used for operations.",
+  image: "https://cdn.images.fecom-media.com/FE00002293/images/B8R00178_A60513-PHE-LEQ-W01.jpg?width=578&height=578&scale=UpscaleCanvas&anchor=MiddleCenter"
+},
+{
+  name: "Needle (pack)",
+  price: 1.0,
+  description: "A sharp metal instrument used for stitching or injections.",
+  image: "https://media.istockphoto.com/id/158429206/photo/needle-for-sewing.jpg?s=612x612&w=0&k=20&c=xLLGjKhXGLhm6s53vKwl4lFkUpRraGjjOl3-CJv5gB0="
+},
+{
+  name: "Antiseptic",
+  price: 3.0,
+  description: "Used to prevent infection by killing or stopping the growth of microorganisms.",
+  image: "https://www.safeandsoundhealth.co.uk/wp-content/uploads/SA4061.png"
+},
+{
+  name: "Narcan",
+  price: 5.0,
+  description: "Emergency treatment for opioid overdose.",
+  image: "https://narcan.com/hs-fs/hubfs/6fcc7f684b2900034d1a11be3c5f2ede-1.png?width=1000&height=729&name=6fcc7f684b2900034d1a11be3c5f2ede-1.png"
+},
+{
+  name: "Nurtec",
+  price: 10.0,
+  description: "Used for treating migraine headaches.",
+  image: "https://static.salcobrandonline.cl/spree/products/95108/large_webp/584690-1.webp?1689873215"
+},
+{
+  name: "Omeprazole",
+  price: 6.0,
+  description: "Reduces stomach acid for GERD and ulcers.",
+  image: "https://www.adegenpharma.com/wp-content/uploads/2023/02/OMILESS-20-CAPSULE.jpg"
+},
+{
+  name: "Opdivo",
+  price: 5.0,
+  description: "Immunotherapy for cancer treatment.",
+  image: "https://vitaminscollection.com/wp-content/uploads/2024/11/opdivo-nivolumab-240-mg-24-ml-J0nM2IXK8-transformed-removebg-preview.png"
+},
+{
+  name: "Crutch",
+  price: 20.0,
+  description: "Mobility aid to support walking when a leg is injured.",
+  image: "https://vissconext.com/cdn/shop/files/0905-AstraUnderArmCrutchesAluminium_S_-01.png?v=1745487810"
+},
+{
+  name: "Cane",
+  price: 15.0,
+  description: "A walking stick used for support while walking.",
+  image: "https://m.media-amazon.com/images/I/71xb3jQM91L.jpg"
+},
+{
+  name: "Wheelchair",
+  price: 95.5,
+  description: "A chair fitted with wheels, used by people unable to walk.",
+  image: "https://cdn11.bigcommerce.com/s-j1lfie8chf/images/stencil/1280x1280/products/134/1815/Invacare_9000_XT_Ultra-Lightweight_Manual_Wheelchair_9__23308.1710253406.jpg?c=1"
+},
+{
+  name: "Hand gloves",
+  price: 5.0,
+  description: "Disposable gloves used for hygiene and protection during medical procedures.",
+  image: "https://5.imimg.com/data5/MR/EF/MG/SELLER-4740913/disposable-hand-gloves-packaging-box.jpg"
+},
+{
+  name: "Entyvio",
+  price: 5.0,
+  description: "Treats ulcerative colitis and Crohn’s disease.",
+  image: "https://mimsshst.blob.core.windows.net/drug-resources/TH/pic/Entyvio%20powd%20for%20infusion%20300%20mg832bb701-302b-49d8-9316-a98a01031d95.GIF"
+},
+{
+  name: "Farxiga",
+  price: 5.0,
+  description: "Treats type 2 diabetes and heart failure.",
+  image: "https://www.buycanadianinsulin.com/wp-content/uploads/2021/02/farxiga-10mg.jpg"
+},
+{
+  name: "Fentanyl Patch",
+  price: 5.0,
+  description: "Strong opioid pain medication in patch form.",
+  image: "https://onemg.gumlet.io/l_watermark_346,w_480,h_480/a_ignore,w_480,h_480,c_fit,q_auto,f_auto/mxossdwv5sd6dy884ter.jpg"
+},
+{
+  name: "Gabapentin",
+  price: 5.0,
+  description: "Treats nerve pain and seizures.",
+  image: "https://www.camberpharma.com/wp-content/uploads/2023/10/Gabapentin_100mg_100.png"
+},
+{
+  name: "Cool pack",
+  price: 5.0,
+  description: "Used to reduce inflammation, pain, or swelling.",
+  image: "https://lifeweartechnologies.com/cdn/shop/files/Instantcoldpack.jpg?v=1684341807"
+},
+{
+  name: "Glucometer",
+  price: 25.0,
+  description: "Device used to measure blood glucose levels.",
+  image: "https://m.media-amazon.com/images/I/61XNC8Prv1L._AC_UF1000,1000_QL80_.jpg"
+},
+{
+  name: "Condom",
+  price: 3.0,
+  description: "Used for contraception and protection against STDs.",
+  image: "https://assets.truemeds.in/Images/ProductImage/TM-COIT1-000071/DUREX-INTENSE-CONDOM-PACK-OF-3_durex-intense-condom-pack-of-3--TM-COIT1-000071_1.webp"
+},
+{
+  name: "Sanitary pads",
+  price: 4.0,
+  description: "Absorbent items worn during menstruation.",
+  image: "https://www.jiomart.com/images/product/original/rvfkv9ryfd/smilepad-long-last-xl-sanitary-pads-for-women-ultra-thin-flexi-wings-pack-of-9-90-pads-product-images-orvfkv9ryfd-p601066943-2-202304291833.jpg?im=Resize=(420,420)"
+},
+{
+  name: "Gemtesa",
+  price: 5.0,
+  description: "Used to treat overactive bladder.",
+  image: "https://www.gemtesa.com/images/mains/real-pill-bottle-with-pill-not-actual-size.png"
+},
+{
+  name: "Humira",
+  price: 5.0,
+  description: "Biologic for autoimmune diseases like arthritis.",
+  image: "https://5.imimg.com/data5/SELLER/Default/2022/12/DA/QP/CT/182005867/0fb55949-86b6-4dc0-8929-06d5d30ef296.jpg"
+},
+{
+  name: "Hydrochlorothiazide",
+  price: 5.0,
+  description: "Diuretic used for high blood pressure and swelling.",
+  image: "https://zeelabpharmacy.com/public/uploads/files/MW66f6840f32169.png"
+},
+{
+  name: "Ibuprofen",
+  price: 5.0,
+  description: "Pain reliever and anti-inflammatory medication.",
+  image: "https://5.imimg.com/data5/SELLER/Default/2023/7/325863554/WI/JM/SY/135658020/ibuprofen-tablets-ip-200-mg-.jpg"
+},
+{
+  name: "Delay Spray",
+  price: 7.0,
+  description: "Used to delay ejaculation and prolong sexual performance.",
+  image: "https://images.apollo247.in/pub/media/catalog/product/d/u/dur0356_1_1.jpg"
+},
+{
+  name: "Horse Power Tablets",
+  price: 10.0,
+  description: "Herbal supplement claimed to enhance stamina and performance.",
+  image: "https://5.imimg.com/data5/SELLER/Default/2024/1/373357971/MP/WU/NT/188932551/horse-power-capsule.jpeg"
+},
+{
+  name: "Ashwagandha",
+  price: 9.0,
+  description: "Herbal supplement used for stress relief and vitality.",
+  image: "https://onemg.gumlet.io/l_watermark_346,w_480,h_480/a_ignore,w_480,h_480,c_fit,q_auto,f_auto/9c6a7fdb065a4f2794cf61626d329f64.jpg"
+},
+{
+  name: "Sanitizer",
+  price: 3.0,
+  description: "Fast-acting gel that kills germs and keeps hands clean without water.",
+  image: "https://assets.unileversolutions.com/v1/34829171.jpg"
+},
+{
+  name: "Januvia",
+  price: 5.8,
+  description: "For type 2 diabetes management.",
+  image: "https://etimg.etb2bimg.com/photo/47703385.cms"
+},
+{
+  name: "Jardiance",
+  price: 5.45,
+  description: "Used to treat type 2 diabetes and heart risks.",
+  image: "https://www.dicardiology.com/sites/default/files/styles/content_feed_large_new/public/JardianceDiabetesMedication.jpg?itok=Iid7XIYd"
+},
+{
+  name: "keytruda",
+  price: 8.8,
+  description: "Immunotherapy for cancer treatment.",
+  image: "https://drugdiscoverytrends.com/wp-content/uploads/2019/10/keytruda_806239.png"
+},
+{
+  name: "Lexapro",
+  price: 8.0,
+  description: "Antidepressant for anxiety and depression.",
+  image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHGLXjsWthrDQ9RiajrpVmUiCz8pfcYspTxDP55qyL5XToyrf7ZtyL9cZWb7wK8rEhyKI&usqp=CAU"
+},
+{
+  name: "Lisinopril",
+  price: 5.8,
+  description: "Treats high blood pressure and heart failure.",
+  image: "https://www.camberpharma.com/wp-content/uploads/2022/09/LisinoprilBottles_2_5_100.jpg"
+},
+{
+  name: "Lofexidine",
+  price: 4.0,
+  description: "Helps reduce opioid withdrawal symptoms.",
+  image: "https://5.imimg.com/data5/SELLER/Default/2024/5/422726377/UN/ID/ZE/13989687/lofexidine.jpg"
+},
+{
+  name: "Loratadine",
+  price: 3.0,
+  description: "Antihistamine for allergies.",
+  image: "https://curistrelief.com/cdn/shop/files/Loratadine10mg365CtRendering-compressed_800x800.png?v=1709568855"
+},
+{
+  name: "Lyrica",
+  price: 4.5,
+  description: "Treats nerve pain, fibromyalgia, and seizures.",
+  image: "https://medsbenzos.com/wp-content/uploads/2024/08/lyrica-300mg-pregabalin-capsules-ip-1.jpg"
+},
+{
+  name: "Melatonin",
+  price: 5.0,
+  description: "Supplement used to regulate sleep cycles.",
+  image: "https://getcompletecare.com/cdn/shop/files/melatoninbottlecopy.jpg?v=1717183872"
+},
+{
+  name: "Meloxicam",
+  price: 12.0,
+  description: "Nonsteroidal anti-inflammatory drug for pain.",
+  image: "https://www.bioveta.cz/obrazek.php?id=3561-10-5-2019.jpeg"
+},
+{
+  name: "Metformin",
+  price: 7.0,
+  description: "First-line treatment for type 2 diabetes.",
+  image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtGvHvhgNNNw8uRwAW3hvXP8u4Dou7q8z46Q&s"
+},
+{
+  name: "Methadone",
+  price: 5.5,
+  description: "Used to treat opioid addiction and pain.",
+  image: "https://www.camberpharma.com/wp-content/uploads/2020/08/Methadone_5mg_100ct_PNG_fit-main.png"
+},
+{
+  name: "Methotrexate",
+  price: 5.0,
+  description: "Chemotherapy and autoimmune disease medication.",
+  image: "https://5.imimg.com/data5/SELLER/Default/2023/4/299650150/ZV/BJ/TU/151454344/methotrexate-injection-250-mg-10ml.jpg"
+},
+{
+  name: "Metoprolol",
+  price: 6.0,
+  description: "Beta blocker for high blood pressure and heart issues.",
+  image: "https://arpimed.am/wp-content/uploads/2018/02/metoprolol_print-e1519042515456.png"
+},
+{
+  name: "Mounjaro",
+  price: 5.4,
+  description: "Used for type 2 diabetes treatment.",
+  image: "https://www.curely.co.uk/uploads/images/products/large/curely-mounjaro-tirzepatide-injection-1744388478mounjaro-2-min.jpg"
+}
+,
+{
+  name: "Prednisone",
+  price: 10.0,
+  description: "A corticosteroid used to treat inflammation and autoimmune conditions.",
+  image: "https://cdn4.volusion.store/qxyca-qbdtq/v/vspfiles/photos/10412-2.jpg?v-cache=1657699370"
+},
+{
+  name: "Probuphine",
+  price: 111.0,
+  description: "Implant used for maintenance treatment of opioid dependence.",
+  image: "https://www.bxpmagazine.com/wp-content/uploads/2017/11/Probuphine.jpg"
+},
+{
+  name: "Qulipta",
+  price: 95.0,
+  description: "Prescription medication used to prevent episodic migraines in adults.",
+  image: "https://www.qulipta.com/content/dam/qulipta/images/QLP-ITS-1121/pill-bottle-desktop.png"
+},
+{
+  name: "Quviviq",
+  price: 32.0,
+  description: "Medication used to treat insomnia by helping regulate the sleep-wake cycle.",
+  image: "https://mims.shorthandstories.com/quviviq/assets/ndNbiRWUWj/quviviq-package-1000x755.png"
+},
+{
+  name: "Rybelsus",
+  price: 89.0,
+  description: "An oral diabetes medicine used to improve blood sugar control in adults with type 2 diabetes.",
+  image: "https://www.rybelsus.com/content/dam/diabetes/niad/brand/rybelsus/images/general/7-mg-bottle.png"
+},
+{
+  name: "Sublocade",
+  price: 59.0,
+  description: "Extended-release injection for treatment of moderate to severe opioid use disorder.",
+  image: "https://cdn.prod.website-files.com/646bc0ec558afbfb90e5ef8c/65a6ebd426471722977126f3_sublocade-100mg.png"
+},
+{
+  name: "Sunlenca",
+  price: 22.0,
+  description: "Used for the treatment of HIV-1 infection in adults with multidrug resistance.",
+  image: "https://www.positivelyaware.com/sites/default/files/styles/max_650x650/public/drug-images/Sunlenca-%282023%29-600x900.png?itok=qTBMaIyL"
+},
+{
+  name: "Tepezza",
+  price: 21.0,
+  description: "Injection used for the treatment of thyroid eye disease (TED).",
+  image: "https://wamanhongkong.com/wp-content/uploads/2024/05/TEPEZZA.jpg"
+},
+{
+  name: "Tramadol",
+  price: 18.0,
+  description: "A pain reliever used to treat moderate to moderately severe pain.",
+  image: "https://mimsshst.blob.core.windows.net/drug-resources/MY/packshot/Ultracet6002PPS0.JPG"
+},
+{
+  name: "Trazodone",
+  price: 15.0,
+  description: "An antidepressant used to treat depression and sometimes insomnia.",
+  image: "https://empower-images.s3.us-east-1.amazonaws.com/images/Website%20Images/Capsules%20and%20Tablets/empower-pharmacy-commercial-trazodone-tablet-294x490.jpg"
+},
+{
+  name: "Viagra",
+  price: 30.0,
+  description: "Used to treat erectile dysfunction by increasing blood flow to the penis.",
+  image: "https://junctionhealthpharmacy.com/wp-content/uploads/2024/10/Screenshot_20241024_101241_Chrome.jpg"
+},
+{
+  name: "Vraylar",
+  price: 35.0,
+  description: "Antipsychotic medication used to treat schizophrenia and bipolar disorder.",
+  image: "https://www.clinicaltrialsarena.com/wp-content/uploads/sites/22/2020/05/1l-image-94.jpg"
+},
+{
+  name: "Wegovy",
+  price: 14.0,
+  description: "Prescription medicine used for chronic weight management in adults with obesity.",
+  image: "https://res.cloudinary.com/zava-www-uk/image/upload/fl_progressive/a_exif,f_auto,e_sharpen:100,c_fit,w_1080,h_810,q_70,fl_lossy/v1716803542/sd/uk/services-setup/weight-loss-unit/wegovy/eqcbruxkpbgdeaff6wmx.png"
+},
+{
+  name: "Wellbutrin",
+  price: 15.0,
+  description: "An antidepressant used to treat major depressive disorder and seasonal affective disorder.",
+  image: "https://www.wellbutrinxl.com/siteassets/img/img-310x266-capsule.webp"
+},
+{
+  name: "Xanax",
+  price: 10.0,
+  description: "Used to treat anxiety and panic disorders by producing a calming effect.",
+  image: "https://recovered.sfo3.cdn.digitaloceanspaces.com/media/15922/Xanax-0.5mg-box.jpg?v=1722504016"
+},
+{
+  name: "Yervoy",
+  price: 20.0,
+  description: "Cancer immunotherapy used in the treatment of melanoma and other cancers.",
+  image: "https://www.medicine-center.org/wp-content/uploads/2021/10/Yervoy.png"
+},
+{
+  name: "Zepbound",
+  price: 10.0,
+  description: "Used for weight loss treatment and management in adults with obesity.",
+  image: "https://joiandblokes.com/wp-content/uploads/2025/03/Zepbound-Vial.png"
+},
+{
+  name: "Zubsolv",
+  price: 20.0,
+  description: "Used for maintenance treatment of opioid dependence as part of a complete treatment plan.",
+  image: "https://www.grxstatic.com/d4fuqqd5l3dbz/products/cwf_tms/Package_24980.PNG"
+},
+{
+  name: "Morphine",
+  price: 25.0,
+  description: "A powerful opioid pain medication used to relieve severe pain.",
+  image: "https://www.pfizerhospitalus.com/sites/default/files/child/images/0409-1134-03_3.jpg"
+},
+{
+  name: "Pantoprazole",
+  price: 12.0,
+  description: "Used to treat acid reflux and stomach ulcers by reducing stomach acid production.",
+  image: "https://www.camberpharma.com/wp-content/uploads/2020/08/Pantoprazole-40mg-1000ct-bottle.png"
+},
+{
+  name: "Plan B",
+  price: 15.0,
+  description: "Emergency contraceptive pill used to prevent pregnancy after unprotected sex.",
+  image: "https://bevmo.com/cdn/shop/files/dc41e614-7bf9-47a3-a21e-28db5f8778cc-padded.png?v=1737123249&width=1445"
+}
+
+    ];
+
+
+const cartBtn = document.getElementById('cartBtn');
+const cartPanel = document.getElementById('cartPanel');
+const closeCartBtn = document.getElementById('closeCartBtn');
+const searchInput = document.getElementById('searchInput');
+const darkModeToggle = document.getElementById('darkModeToggle');
+const cartCountElem = document.getElementById('cartCount');
+const placeOrderBtn = document.getElementById('placeOrderBtn');
+const USD_TO_INR = 83.0; // or your preferred current rate
+
+let cart = {};
+
+  const shopContainer = document.querySelector(".shop-container");
+
+  // Clear container (optional if empty)
+  shopContainer.innerHTML = "";
+
+  // Render only first 8 products
+  products.slice(0, 8).forEach(product => {
+    const productEl = document.createElement("article");
+    productEl.classList.add("shop-item");
+    productEl.innerHTML = `
+      <img src="${product.image}" alt="${product.name}" />
+      <h2>${product.name}</h2>
+      <p class="description">${product.description}</p>
+      <div class="price">₹${product.price.toFixed(2)}</div>
+      <button>Add to Cart</button>
+    `;
+    shopContainer.appendChild(productEl);
+  });
+
+
+  const allProducts = document.querySelectorAll(".shop-item");
+
+allProducts.forEach((item, index) => {
+  if (index >= 8) {
+    item.style.display = "none";
+  } else {
+    item.style.display = "block";
+  }
+});
+
+
+if (localStorage.getItem('cart')) {
+  try {
+    cart = JSON.parse(localStorage.getItem('cart'));
+  } catch {
+    cart = {};
+  }
+}
+
+function renderProducts(filter = '') {
+  shopContainer.innerHTML = '';
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(filter.toLowerCase())
+  );
+  if (filteredProducts.length === 0) {
+    shopContainer.innerHTML = '<p>No products found.</p>';
+    return;
+  }
+  filteredProducts.forEach(product => {
+    const productEl = document.createElement('article');
+    productEl.className = 'shop-item';
+    productEl.setAttribute('tabindex', '0');
+    productEl.innerHTML = `
+      <img style="width: 100%; height: 100%; display: flex; justify-content: center; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease;"
+ src="${product.image}" alt="${product.name}" loading="lazy" onmouseover="this.style.transform='scale(1.03)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.2)'"
+  onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'"
+ />
+      <h2>${product.name}</h2>
+      <p class="description">${product.description}</p>
+      <p class="price">₹${(product.price * USD_TO_INR).toFixed(2)}</p>
+      <button aria-label="Add ${product.name} to cart">Add to Cart</button>
+
+    `;
+    productEl.querySelector('button').addEventListener('click', () => {
+      addToCart(product.name, product.price);
+    });
+    shopContainer.appendChild(productEl);
+  });
+}
+
+function addToCart(name, price) {
+  if (cart[name]) {
+    cart[name].quantity += 1;
+  } else {
+    cart[name] = { price: price, quantity: 1 };
+  }
+  saveCart();
+  updateCartUI();
+  openCart();
+}
+
+function removeFromCart(name) {
+  if (cart[name]) {
+    delete cart[name];
+    saveCart();
+    updateCartUI();
+  }
+}
+
+function updateQuantity(name, qty) {
+  const quantity = parseInt(qty, 10);
+  if (!Number.isInteger(quantity) || quantity < 1) {
+    updateCartUI();
+    return;
+  }
+  if (cart[name]) {
+    cart[name].quantity = quantity;
+    saveCart();
+    updateCartUI();
+  }
+}
+
+function changeQuantity(name, delta) {
+  if (cart[name]) {
+    cart[name].quantity += delta;
+    if (cart[name].quantity < 1) {
+      removeFromCart(name);
+    } else {
+      saveCart();
+      updateCartUI();
+    }
+  }
+}
+
+function calculateTotal() {
+  return Object.values(cart).reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+}
+
+function saveCart() {
+  localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+function updateCartUI() {
+  cartCountElem.textContent = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+
+  const cartItems = document.getElementById('cartItems');
+  cartItems.innerHTML = '';
+
+  if (Object.keys(cart).length === 0) {
+    cartItems.innerHTML = '<p>Your cart is empty.</p>';
+    document.getElementById('cartTotal').textContent = 'Total: ₹ 0.00';
+    updatePlaceOrderButton();
+    return;
+  }
+
+  for (const [name, item] of Object.entries(cart)) {
+    const cartItem = document.createElement('div');
+    cartItem.className = 'cart-item';
+    cartItem.innerHTML = `
+      <div>
+        <h3>${name}</h3>
+        <p>₹${(item.price * USD_TO_INR).toFixed(2)} x ${item.quantity} = ₹${(item.price * item.quantity * USD_TO_INR).toFixed(2)}</p>
+      </div>
+      <div class="cart-item-controls">
+        <div class="quantity-controls" aria-label="Adjust quantity for ${name}">
+          <button class="quantity-btn" aria-label="Decrease quantity of ${name}" tabindex="0">-</button>
+          <input class="quantity-input" type="number" min="1" aria-label="Quantity of ${name}" value="${item.quantity}" />
+          <button class="quantity-btn" aria-label="Increase quantity of ${name}" tabindex="0">+</button>
+        </div>
+        <button class="remove-item" aria-label="Remove ${name} from cart" tabindex="0">&times;</button>
+      </div>
+    `;
+
+    const [decBtn, qtyInput, incBtn] = cartItem.querySelectorAll('.quantity-controls > *');
+    decBtn.addEventListener('click', () => changeQuantity(name, -1));
+    incBtn.addEventListener('click', () => changeQuantity(name, 1));
+    qtyInput.addEventListener('change', (e) => updateQuantity(name, e.target.value));
+    cartItem.querySelector('.remove-item').addEventListener('click', () => removeFromCart(name));
+
+    cartItems.appendChild(cartItem);
+  }
+
+document.getElementById('cartTotal').textContent = `Total: ₹${(calculateTotal() * USD_TO_INR).toFixed(2)}`;
+
+  updatePlaceOrderButton();
+}
+
+function updatePlaceOrderButton() {
+  placeOrderBtn.disabled = Object.keys(cart).length === 0;
+}
+
+function openCart() {
+  cartPanel.classList.add('open');
+  cartPanel.focus();
+}
+
+function closeCart() {
+  cartPanel.classList.remove('open');
+  cartBtn.focus();
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+  darkModeToggle.setAttribute('aria-pressed', isDark.toString());
+  darkModeToggle.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+}
+
+function loadDarkMode() {
+  if (localStorage.getItem('darkMode') === 'enabled') {
+    document.body.classList.add('dark');
+    darkModeToggle.setAttribute('aria-pressed', 'true');
+    darkModeToggle.textContent = 'Light Mode';
+  }
+}
+
+cartBtn.addEventListener('click', openCart);
+closeCartBtn.addEventListener('click', closeCart);
+darkModeToggle.addEventListener('click', toggleDarkMode);
+searchInput.addEventListener('input', (e) => {
+  renderProducts(e.target.value.trim());
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && cartPanel.classList.contains('open')) {
+    closeCart();
+  }
+});
+placeOrderBtn.addEventListener('click', () => {
+  if (Object.keys(cart).length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
+  alert("Thank you for your order! We'll process it soon.");
+  cart = {};
+  saveCart();
+  updateCartUI();
+  closeCart();
+});
+
+loadDarkMode();
+renderProducts();
+updateCartUI();
+
+placeOrderBtn.addEventListener('click', async () => {
+  if (Object.keys(cart).length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
+
+  try {
+    const response = await fetch("/place_order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        cart: cart,
+        customer: "Jhon" // Optional: Replace with actual user if logged in
+      })
+    });
+
+    const result = await response.json();
+    if (result.status === "success") {
+      alert("Order placed successfully!");
+      cart = {};
+      saveCart();
+      updateCartUI();
+      closeCart();
+    } else {
+      alert("Failed to place order.");
+    }
+  } catch (error) {
+    alert("Error placing order.");
+    console.error(error);
+  }
+});
+
+
+  </script>
+</body>
+</html>
+
+
